@@ -12,37 +12,36 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/nodou")
 public class NodeController {
 
     @Value("${secret.key}")
     private String secret_key;
 
-    @RequestMapping("/addNode")
+    @RequestMapping("/nodou")
     public ResultMsg addNode(@RequestBody RequestModel requestModel) {
         Map map = JSON.parseObject(secret_key, Map.class);
-        if (requestModel == null || (requestModel.getUsername() == null) || (requestModel.getPassword() == null) ||
-                (requestModel.getNameNode() == null) || (requestModel.getNodeMsg() == null)) {
-            return new ResultMsg(false, "参数不合法");
-        }
-        if (map.get(requestModel.getUsername()).equals(requestModel.getPassword())) {
-            NodeManager.addNode(requestModel.getUsername(), requestModel.getNameNode(), requestModel.getNodeMsg());
-            return new ResultMsg(true, "注册成功");
-        } else {
-            return new ResultMsg(false, "node password error 节点密码错误");
-        }
-    }
-
-    @RequestMapping("/getNode")
-    public ResultMsg getNode(@RequestBody RequestModel requestModel) {
-        Map map = JSON.parseObject(secret_key, Map.class);
-        if (requestModel == null || (requestModel.getUsername() == null) || (requestModel.getPassword() == null)) {
-            return new ResultMsg(false, "参数不合法");
-        }
-        if (map.get(requestModel.getUsername()).equals(requestModel.getPassword())) {
-            return new ResultMsg(true, NodeManager.getNode(requestModel.getUsername()));
-        } else {
-            return new ResultMsg(false, "node password error 节点密码错误");
+        if (requestModel != null && requestModel.getType() != null) {
+            if (requestModel.getUsername() == null || requestModel.getPassword() == null) {
+                return new ResultMsg(false, "用户名密码不能为空");
+            }
+            if (map.get(requestModel.getUsername()).equals(requestModel.getPassword())) {
+                if ("add".equals(requestModel.getType())) {
+                    if (requestModel.getNameNode() == null || requestModel.getNodeMsg() == null) {
+                        return new ResultMsg(false, "注册节点参数不能为空");
+                    } else {
+                        NodeManager.addNode(requestModel.getUsername(), requestModel.getNameNode(), requestModel.getNodeMsg());
+                        return new ResultMsg(true, "注册成功");
+                    }
+                } else if ("get".equals(requestModel.getType())) {
+                    return new ResultMsg(true, NodeManager.getNode(requestModel.getUsername()));
+                }else{
+                    return new ResultMsg(false, "获取类型错误，请填写正确的方式");
+                }
+            } else {
+                return new ResultMsg(false, "node password error 节点密码错误");
+            }
+        }else{
+            return new ResultMsg(false, "获取类型不能为空");
         }
     }
 }

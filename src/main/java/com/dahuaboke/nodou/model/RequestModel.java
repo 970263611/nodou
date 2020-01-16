@@ -6,20 +6,25 @@ public class RequestModel {
     private String password;
     private String nameNode;
     private String nodeMsg;
+    private String type;
 
     public RequestModel() {
     }
 
-    public RequestModel(String nameNode, String nodeMsg) {
-        this.nameNode = nameNode;
-        this.nodeMsg = nodeMsg;
-    }
-
-    public RequestModel(String username, String password, String nameNode, String nodeMsg) {
+    public RequestModel(String username, String password, String nameNode, String nodeMsg, String type) {
         this.username = username;
         this.password = password;
         this.nameNode = nameNode;
         this.nodeMsg = nodeMsg;
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getUsername() {
