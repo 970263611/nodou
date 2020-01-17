@@ -2,14 +2,12 @@ package com.dahuaboke.nodou.manager;
 
 import com.dahuaboke.nodou.model.NodeModel;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NodeManager {
 
     private volatile static NodeModel parentNode = new NodeModel<String, NodeModel>();
+    public volatile static Set<String> nodeIps = new HashSet();
 
     /**
      * 单例
@@ -84,22 +82,35 @@ public class NodeManager {
      *
      * @param hosts
      */
-    public static void removeNode(String name, String[] hosts) {
-        NodeModel nodeModel = getInstance(name);
+    public static void removeNode(String[] hosts) {
         if (hosts == null || hosts.length <= 0) {
             System.err.println("parameters passed in is illegal 传入参数不合法");
         } else {
-            for (String host : hosts) {
-                Iterator it = nodeModel.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry entry = (Map.Entry) it.next();
-                    Set<String> set = (Set<String>) entry.getValue();
-                    for (String ip : set) {
-                        if (ip.contains(host)) {
-                            set.remove(ip);
+            Iterator it = parentNode.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                Map map = (Map) entry.getValue();
+                Iterator child = map.entrySet().iterator();
+                while (child.hasNext()) {
+                    Map.Entry childEntry = (Map.Entry) child.next();
+                    Set<String> set = (Set<String>) childEntry.getValue();
+                    for (String host : hosts) {
+                        if (set.contains(host)) {
+                            set.remove(host);
                         }
                     }
-                    nodeModel.put(host, set);
+                    if(set.size() == 0){
+                        map.remove(childEntry.getKey());
+                    }else{
+                        map.put(childEntry.getKey(), set);
+                    }
+                }
+            }
+            Iterator last = parentNode.entrySet().iterator();
+            while (last.hasNext()) {
+                Map.Entry entry = (Map.Entry) last.next();
+                if(((NodeModel) entry.getValue()).size() == 0){
+                    last.remove();
                 }
             }
         }
@@ -108,9 +119,7 @@ public class NodeManager {
     /**
      * 持久化方法
      */
-    public static void persistence(String name) {
-        NodeModel nodeModel = getInstance(name);
-        String data = nodeModel.toString();
-        System.out.println(data);
+    public static String persistence() {
+        return parentNode.toString();
     }
 }

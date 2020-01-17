@@ -29,6 +29,7 @@ public class NodeController {
                     if (requestModel.getNameNode() == null || requestModel.getNodeMsg() == null) {
                         return new ResultMsg(false, "注册节点参数不能为空");
                     } else {
+                        NodeManager.nodeIps.add(requestModel.getNodeMsg());
                         NodeManager.addNode(requestModel.getUsername(), requestModel.getNameNode(), requestModel.getNodeMsg());
                         return new ResultMsg(true, "注册成功");
                     }
