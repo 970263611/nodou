@@ -1,12 +1,15 @@
 package com.dahuaboke.nodou.manager;
 
 import com.dahuaboke.nodou.model.NodeModel;
+import com.dahuaboke.nodou.util.FileUtil;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.io.File;
 import java.util.*;
 
 public class NodeManager {
 
-    private volatile static NodeModel parentNode = new NodeModel<String, NodeModel>();
+    public volatile static NodeModel parentNode;
     public volatile static Set<String> nodeIps = new HashSet();
 
     /**
