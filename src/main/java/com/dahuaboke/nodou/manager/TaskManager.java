@@ -24,11 +24,12 @@ public class TaskManager {
 
     @Bean
     public PersistenceTask persistenceTask() {
-        String jsonString = FileUtil.read(log_address);
         NodeManager.parentNode = new NodeModel<String, NodeModel>();
-        if (jsonString != null && !"".equals(jsonString)) {
-            List<Map> list = JSON.parseArray(jsonString, Map.class);
-            for (Map map : list) {
+        try{
+            String jsonString = FileUtil.read(log_address);
+            if (jsonString != null && !"".equals(jsonString)) {
+                List<Map> list = JSON.parseArray(jsonString, Map.class);
+                for (Map map : list) {
 //                for (Object key : map.keySet()) {
 //                    JSONObject o = (JSONObject) map.get(key);
 //                    NodeModel nodeModel = new NodeModel();
@@ -39,8 +40,11 @@ public class TaskManager {
 //                    }
 //                    NodeManager.parentNode.put(key,nodeModel);
 //                }
-                NodeManager.parentNode.putAll(map);
+                    NodeManager.parentNode.putAll(map);
+                }
             }
+        }catch(Exception e){
+            System.out.println("无备份文件");
         }
         return new PersistenceTask(log_address);
     }

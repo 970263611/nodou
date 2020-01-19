@@ -39,7 +39,7 @@ public class FileUtil {
                 }
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("无备份文件");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
