@@ -1,5 +1,9 @@
 package com.dahuaboke.nodou.manager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.dahuaboke.nodou.model.NodeModel;
 import com.dahuaboke.nodou.util.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +41,11 @@ public class NodeManager {
         NodeModel nodeModel = getInstance(name);
         Set set = null;
         if (nodeModel.containsKey(key)) {
-            set = (Set<String>) nodeModel.get(key);
+            if(nodeModel.get(key) instanceof JSONArray){
+                set = new HashSet(JSONObject.parseArray(JSON.toJSONString(nodeModel.get(key)), String.class));
+            }else{
+                set = (Set<String>) nodeModel.get(key);
+            }
             if (!set.contains(value)) {
                 set.add(value);
             }
