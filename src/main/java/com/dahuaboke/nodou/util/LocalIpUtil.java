@@ -6,9 +6,6 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
 
 public class LocalIpUtil {
-    public static void main(String[] args) {
-        System.out.println("本机IP:" + getIpAddress());
-    }
 
     public static String getIpAddress() {
         try {

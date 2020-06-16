@@ -1,8 +1,5 @@
 package com.dahuaboke.nodou.timeTask;
 
-import com.dahuaboke.nodou.manager.NodeManager;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.io.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

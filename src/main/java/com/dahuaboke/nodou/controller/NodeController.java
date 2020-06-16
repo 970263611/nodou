@@ -1,12 +1,14 @@
 package com.dahuaboke.nodou.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.dahuaboke.nodou.manager.NodeManager;
+import com.dahuaboke.nodou.exception.NodouException;
+import com.dahuaboke.nodou.manager.ReadOnlyManager;
+import com.dahuaboke.nodou.manager.RegisterManager;
+import com.dahuaboke.nodou.manager.WriteReadManager;
 import com.dahuaboke.nodou.model.RequestModel;
-import com.dahuaboke.nodou.model.ResultMsg;
-import org.springframework.beans.factory.annotation.Value;
+import com.dahuaboke.nodou.util.NodouUtil;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -14,35 +16,26 @@ import java.util.Map;
 @RestController
 public class NodeController {
 
-    @Value("${secret.key}")
-    private String secret_key;
-
-    @RequestMapping("/nodou")
-    public ResultMsg addNode(@RequestBody RequestModel requestModel) {
-        Map map = JSON.parseObject(secret_key, Map.class);
-        if (requestModel != null && requestModel.getType() != null) {
-            if (requestModel.getUsername() == null || requestModel.getPassword() == null) {
-                return new ResultMsg(false, "用户名密码不能为空");
+    @GetMapping("/nodou")
+    public Map getNode(@RequestBody RequestModel requestModel) throws NodouException {
+        NodouUtil.checkParam(requestModel);
+        final String key = NodouUtil.assemblyKey(requestModel);
+        Map map = ReadOnlyManager.getNode(key);
+        if (NodouUtil.isBlank(map)) {
+            map = WriteReadManager.getNode(key);
+            if (NodouUtil.isBlank(map)) {
+                map = RegisterManager.getNode(key);
             }
-            if (map.get(requestModel.getUsername()).equals(requestModel.getPassword())) {
-                if ("add".equals(requestModel.getType())) {
-                    if (requestModel.getNameNode() == null || requestModel.getNodeMsg() == null) {
-                        return new ResultMsg(false, "注册节点参数不能为空");
-                    } else {
-                        NodeManager.nodeIps.add(requestModel.getNodeMsg());
-                        NodeManager.addNode(requestModel.getUsername(), requestModel.getNameNode(), requestModel.getNodeMsg());
-                        return new ResultMsg(true, "注册成功");
-                    }
-                } else if ("get".equals(requestModel.getType())) {
-                    return new ResultMsg(true, NodeManager.getNode(requestModel.getUsername()));
-                }else{
-                    return new ResultMsg(false, "获取类型错误，请填写正确的方式");
-                }
-            } else {
-                return new ResultMsg(false, "node password error 节点密码错误");
-            }
-        }else{
-            return new ResultMsg(false, "获取类型不能为空");
         }
+        if (NodouUtil.isBlank(map)) {
+            throw new NodouException("没有找到符合的节点");
+        }
+        return map;
+    }
+
+    @PostMapping("/nodou")
+    public void postNode(@RequestBody RequestModel requestModel) throws NodouException {
+        NodouUtil.checkParam(requestModel);
+        WriteReadManager.addNode(requestModel);
     }
 }

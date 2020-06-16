@@ -1,31 +1,36 @@
 package com.dahuaboke.nodou.model;
 
+import java.util.Map;
+
 public class RequestModel {
 
     private String username;
     private String password;
-    private String nameNode;
-    private String nodeMsg;
-    private String type;
+    private String nodeKey;
+    private String nodeValue;
+    private String version;
+    private boolean autoRemove = true;
 
     public RequestModel() {
     }
 
-    public RequestModel(String username, String password, String nameNode, String nodeMsg, String type) {
-        this.username = username;
-        this.password = password;
-        this.nameNode = nameNode;
-        this.nodeMsg = nodeMsg;
-        this.type = type;
+
+    public String getVersion() {
+        return version;
     }
 
-    public String getType() {
-        return type;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public boolean isAutoRemove() {
+        return autoRemove;
     }
+
+    public void setAutoRemove(boolean autoRemove) {
+        this.autoRemove = autoRemove;
+    }
+
 
     public String getUsername() {
         return username;
@@ -43,19 +48,19 @@ public class RequestModel {
         this.password = password;
     }
 
-    public String getNameNode() {
-        return nameNode;
+    public String getNodeKey() {
+        return nodeKey;
     }
 
-    public void setNameNode(String nameNode) {
-        this.nameNode = nameNode;
+    public void setNodeKey(String nodeKey) {
+        this.nodeKey = nodeKey;
     }
 
-    public String getNodeMsg() {
-        return nodeMsg;
+    public String getNodeValue() {
+        return nodeValue;
     }
 
-    public void setNodeMsg(String nodeMsg) {
-        this.nodeMsg = nodeMsg;
+    public void setNodeValue(String nodeValue) {
+        this.nodeValue = nodeValue;
     }
 }
