@@ -1,0 +1,38 @@
+package com.dahuaboke.nodou.task;
+
+import com.dahuaboke.nodou.manager.RegisterManager;
+import com.dahuaboke.nodou.model.NodeModel;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * @author:dahua
+ * @date:2020/6/17
+ * @description: dahua nodou 2.0
+ */
+public class RegisterToReadTask implements Runnable {
+
+    private NodeModel nodeModel;
+    private String name;
+    private Lock lock = new ReentrantLock();
+
+    public RegisterToReadTask(NodeModel nodeModel,String name) {
+        this.nodeModel = nodeModel;
+        this.name = name;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("----------" + name + ": RegisterToReadTask begin!----------");
+        try {
+            if (lock.tryLock()) {
+                nodeModel.clear();
+                nodeModel.putAll(RegisterManager.getInstance());
+            }
+        } finally {
+            lock.unlock();
+        }
+        System.out.println("----------" + name + ": RegisterToReadTask end!----------");
+    }
+}

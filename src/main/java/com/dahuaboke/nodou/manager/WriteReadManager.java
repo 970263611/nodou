@@ -18,10 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WriteReadManager {
 
     /**
-     * value是list，namespace - set（同步的接口集合）
-     */
-    public static HashMap<String,HashSet> map = new HashMap();
-    /**
      * 单例 获取NodeModel
      *
      * @return NodeModel

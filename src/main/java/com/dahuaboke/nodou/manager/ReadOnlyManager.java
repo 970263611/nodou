@@ -25,11 +25,11 @@ public class ReadOnlyManager {
      *
      * @return NodeModel
      */
-    private static NodeModel getInstance1() {
+    public static NodeModel getInstance1() {
         return SingleRegisterNode1.INSTANCE;
     }
 
-    private static NodeModel getInstance2() {
+    public static NodeModel getInstance2() {
         return SingleRegisterNode2.INSTANCE;
     }
 
