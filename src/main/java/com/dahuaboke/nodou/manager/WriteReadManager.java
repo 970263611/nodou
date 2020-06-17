@@ -4,7 +4,10 @@ import com.dahuaboke.nodou.model.NodeModel;
 import com.dahuaboke.nodou.model.RequestModel;
 import com.dahuaboke.nodou.util.NodouUtil;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -15,11 +18,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WriteReadManager {
 
     /**
+     * value是list，namespace - set（同步的接口集合）
+     */
+    public static HashMap<String,HashSet> map = new HashMap();
+    /**
      * 单例 获取NodeModel
      *
      * @return NodeModel
      */
-    private static NodeModel getInstance() {
+    public static NodeModel getInstance() {
         return SingleRegisterNode.INSTANCE;
     }
 

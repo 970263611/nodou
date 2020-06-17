@@ -1,5 +1,8 @@
 package com.dahuaboke.nodou.timeTask;
 
+import com.alibaba.fastjson.JSON;
+import com.dahuaboke.nodou.manager.RegisterManager;
+
 import java.io.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -14,7 +17,8 @@ public class PersistenceTask {
     }
 
     public void run(String address) {
-        pool.scheduleAtFixedRate(new Task(address), 0, 60 * 5, TimeUnit.SECONDS);
+//        pool.scheduleAtFixedRate(new Task(address), 0, 60 * 5, TimeUnit.SECONDS);
+        pool.scheduleAtFixedRate(new Task(address), 0, 1, TimeUnit.SECONDS);
     }
 
     class Task implements Runnable {
@@ -26,7 +30,7 @@ public class PersistenceTask {
 
         @Override
         public void run() {
-            String data = NodeManager.persistence();
+            String data = JSON.toJSONString(RegisterManager.getInstance());
             if (data != null && !"".equals(data) && !"[]".equals(data)) {
                 File file = new File(address);
                 FileOutputStream fos = null;

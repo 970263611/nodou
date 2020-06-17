@@ -1,7 +1,5 @@
 package com.dahuaboke.nodou.model;
 
-import java.util.Map;
-
 public class RequestModel {
 
     private String username;
@@ -10,10 +8,6 @@ public class RequestModel {
     private String nodeValue;
     private String version;
     private boolean autoRemove = true;
-
-    public RequestModel() {
-    }
-
 
     public String getVersion() {
         return version;
@@ -30,7 +24,6 @@ public class RequestModel {
     public void setAutoRemove(boolean autoRemove) {
         this.autoRemove = autoRemove;
     }
-
 
     public String getUsername() {
         return username;

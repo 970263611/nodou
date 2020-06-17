@@ -17,7 +17,7 @@ public class RegisterManager {
      *
      * @return NodeModel
      */
-    private static NodeModel getInstance() {
+    public static NodeModel getInstance() {
         return SingleRegisterNode.INSTANCE;
     }
 

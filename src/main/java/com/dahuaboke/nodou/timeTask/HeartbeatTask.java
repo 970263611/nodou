@@ -1,10 +1,12 @@
 package com.dahuaboke.nodou.timeTask;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import com.dahuaboke.nodou.manager.ReadOnlyManager;
+import com.dahuaboke.nodou.manager.RegisterManager;
+import com.dahuaboke.nodou.util.NetUtil;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -13,10 +15,6 @@ public class HeartbeatTask {
 
     private static ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);
 
-    public HeartbeatTask() {
-        run();
-    }
-
     public void run() {
         pool.scheduleAtFixedRate(new Task(), 30, 30, TimeUnit.SECONDS);
     }
@@ -24,37 +22,28 @@ public class HeartbeatTask {
     class Task implements Runnable {
         @Override
         public void run() {
-            if (NodeManager.nodeIps != null && NodeManager.nodeIps.size() > 0) {
-                List<String> list = new ArrayList<>();
-                for (String ip : NodeManager.nodeIps) {
-                    if(!live(ip)){
-                        list.add(ip);
+            RegisterManager.getInstance().forEach((k, v) -> {
+                String[] keys = ((String) k).split("-");
+                if (Boolean.valueOf(keys[keys.length - 1])) {
+                    Iterator iterator = ((Map) v).keySet().iterator();
+                    while (iterator.hasNext()) {
+                        Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+                        if (!NetUtil.live(entry.getValue())) {
+                            iterator.remove();
+                        } else {
+                            if (ReadOnlyManager.toReadSyncMap.containsKey(k)) {
+                                HashSet set = ReadOnlyManager.toReadSyncMap.get(k);
+                                set.add(entry.getKey());
+                                ReadOnlyManager.toReadSyncMap.put((String) k, set);
+                            } else {
+                                ReadOnlyManager.toReadSyncMap.put((String) k, new HashSet());
+                            }
+                        }
                     }
                 }
-                if(list.size()>0){
-                    for(String host : list){
-                        NodeManager.nodeIps.remove(host);
-                    }
-                    NodeManager.removeNode(list.toArray(new String[list.size()]));
-                }
-            }
+            });
         }
     }
 
-    public boolean live(String ip){
-        boolean flag = true;
-        Socket socket = new Socket();
-        try {
-            socket.connect(new InetSocketAddress(ip.split(":")[0], Integer.parseInt(ip.split(":")[1])));
-        } catch (IOException e) {
-            flag = false;
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return flag;
-    }
+
 }
