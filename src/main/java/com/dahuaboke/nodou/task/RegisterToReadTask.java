@@ -17,7 +17,7 @@ public class RegisterToReadTask implements Runnable {
     private String name;
     private Lock lock = new ReentrantLock();
 
-    public RegisterToReadTask(NodeModel nodeModel,String name) {
+    public RegisterToReadTask(NodeModel nodeModel, String name) {
         this.nodeModel = nodeModel;
         this.name = name;
     }
@@ -26,9 +26,13 @@ public class RegisterToReadTask implements Runnable {
     public void run() {
         System.out.println("----------" + name + ": RegisterToReadTask begin!----------");
         try {
-            if (lock.tryLock()) {
+            lock.lock();
+            if ("instance1".equals(name)) {
                 nodeModel.clear();
                 nodeModel.putAll(RegisterManager.getInstance());
+            }
+            if ("instance2".equals(name)) {
+
             }
         } finally {
             lock.unlock();
