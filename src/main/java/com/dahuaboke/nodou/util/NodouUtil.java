@@ -3,7 +3,6 @@ package com.dahuaboke.nodou.util;
 import com.alibaba.fastjson.JSON;
 import com.dahuaboke.nodou.exception.NodouException;
 import com.dahuaboke.nodou.model.RequestModel;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
@@ -14,12 +13,7 @@ import java.util.Map;
  */
 public class NodouUtil {
 
-    private static String secret_key;
-
-    @Value("${secret.key}")
-    public void setSecret_key(String secret_key) {
-        this.secret_key = secret_key;
-    }
+    public static String secret_key;
 
     public static String assemblyKey(RequestModel model) {
         StringBuffer sb = new StringBuffer();
@@ -31,7 +25,7 @@ public class NodouUtil {
         return new String(sb);
     }
 
-    public static void checkParam(RequestModel requestModel) throws NodouException {
+    public static void checkParam(RequestModel requestModel, String type) throws NodouException {
         Map map = JSON.parseObject(secret_key, Map.class);
         if (requestModel != null) {
             String username = requestModel.getUsername();
@@ -41,8 +35,13 @@ public class NodouUtil {
             }
             if (map.containsKey(username)) {
                 if (map.get(username).equals(password)) {
-                    if (isBlank(requestModel.getNodeKey()) || isBlank(requestModel.getNodeValue())) {
-                        throw new NodouException("注册节点参数不能为空");
+                    if ("get".equals(type)) {
+                        return;
+                    } else if ("set".equals(type)) {
+                        if (isBlank(requestModel.getNodeKey()) || isBlank(requestModel.getNodeValue())) {
+                            throw new NodouException("注册节点参数不能为空");
+                        }
+                        return;
                     }
                 } else {
                     throw new NodouException("node password error 节点密码错误");
@@ -55,6 +54,9 @@ public class NodouUtil {
     }
 
     public static boolean isBlank(Object obj) {
+        if (obj == null) {
+            return true;
+        }
         if (obj instanceof String) {
             String s = (String) obj;
             if (s == null || "".equals(s)) {
@@ -70,6 +72,9 @@ public class NodouUtil {
     }
 
     public static boolean isNotBlank(Object obj) {
+        if (obj == null) {
+            return false;
+        }
         if (obj instanceof String) {
             String s = (String) obj;
             if (s != null && "".equals(s)) {

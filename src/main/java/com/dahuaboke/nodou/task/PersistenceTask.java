@@ -17,7 +17,7 @@ public class PersistenceTask implements Runnable {
     public void run() {
         System.out.println("----------PersistenceTask begin!----------");
         String data = JSON.toJSONString(RegisterManager.getInstance());
-        if (data != null && !"".equals(data) && !"[]".equals(data)) {
+        if (data != null && !"".equals(data) && !"{}".equals(data)) {
             File file = new File(address);
             FileOutputStream fos = null;
             if (!file.exists()) {

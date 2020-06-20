@@ -17,8 +17,8 @@ import java.util.Map;
 public class NodeController {
 
     @GetMapping("/nodou")
-    public Map getNode(@RequestBody RequestModel requestModel) throws NodouException {
-        NodouUtil.checkParam(requestModel);
+    public Map getNode(RequestModel requestModel) throws NodouException {
+        NodouUtil.checkParam(requestModel, "get");
         final String key = NodouUtil.assemblyKey(requestModel);
         Map map = ReadOnlyManager.getNode(key);
         if (NodouUtil.isBlank(map)) {
@@ -34,8 +34,9 @@ public class NodeController {
     }
 
     @PostMapping("/nodou")
-    public void postNode(@RequestBody RequestModel requestModel) throws NodouException {
-        NodouUtil.checkParam(requestModel);
+    public String postNode(@RequestBody RequestModel requestModel) throws NodouException {
+        NodouUtil.checkParam(requestModel, "set");
         WriteReadManager.addNode(requestModel);
+        return "ok";
     }
 }
