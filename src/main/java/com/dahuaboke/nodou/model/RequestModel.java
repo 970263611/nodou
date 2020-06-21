@@ -58,4 +58,16 @@ public class RequestModel implements Serializable {
     public void setNodeValue(String nodeValue) {
         this.nodeValue = nodeValue;
     }
+
+    @Override
+    public String toString() {
+        return "RequestModel{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nodeKey='" + nodeKey + '\'' +
+                ", nodeValue='" + nodeValue + '\'' +
+                ", version='" + version + '\'' +
+                ", autoRemove=" + autoRemove +
+                '}';
+    }
 }
