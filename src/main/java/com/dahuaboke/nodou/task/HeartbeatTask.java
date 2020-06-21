@@ -2,6 +2,7 @@ package com.dahuaboke.nodou.task;
 
 import com.dahuaboke.nodou.manager.ReadOnlyManager;
 import com.dahuaboke.nodou.manager.RegisterManager;
+import com.dahuaboke.nodou.util.NetUtil;
 
 import java.util.*;
 
@@ -34,13 +35,10 @@ public class HeartbeatTask implements Runnable {
                     Set removeSet = new HashSet();
                     while (sit.hasNext()) {
                         String url = sit.next();
-//                        if (!NetUtil.live(url)) {
-//                            removeSet.add(url);
-//                            sit.remove();
-//                        }
-                        if (!false) {
+                        if (!NetUtil.live(url)) {
                             removeSet.add(url);
                             sit.remove();
+                            System.out.println("remove node:" + url);
                         }
                     }
                     if (set.isEmpty()) {
@@ -55,6 +53,9 @@ public class HeartbeatTask implements Runnable {
                 }
                 if (!map.isEmpty()) {
                     ReadOnlyManager.toReadSyncMap.put((String) k, map);
+                }
+                if(((Map) v).isEmpty()){
+                    RegisterManager.getInstance().remove(k);
                 }
             }
         });

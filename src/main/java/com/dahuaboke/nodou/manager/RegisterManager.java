@@ -3,7 +3,6 @@ package com.dahuaboke.nodou.manager;
 import com.dahuaboke.nodou.model.NodeModel;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author:dahua
@@ -33,7 +32,7 @@ public class RegisterManager {
      */
     protected static void addNode(String namespace, Map v) {
         //强转必须指定Map具体实例，否则是浅拷贝
-        Map map = (ConcurrentHashMap) getInstance().get(namespace);
+        Map map = (NodeModel) getInstance().get(namespace);
         if (map != null) {
             map.putAll(v);
         } else {
@@ -47,7 +46,7 @@ public class RegisterManager {
      * @param namespace
      */
     protected static void removeNamespace(String namespace) {
-        ((ConcurrentHashMap) getInstance().get(namespace)).remove(namespace);
+        ((NodeModel) getInstance().get(namespace)).remove(namespace);
     }
 
     /**
@@ -57,7 +56,7 @@ public class RegisterManager {
      * @param k
      */
     protected static void removeNode(String namespace, String k) {
-        Map map = (ConcurrentHashMap) getInstance().get(namespace);
+        Map map = (NodeModel) getInstance().get(namespace);
         if (map != null) {
             map.remove(k);
         }

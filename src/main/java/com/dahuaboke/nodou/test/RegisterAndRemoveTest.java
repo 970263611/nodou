@@ -14,7 +14,7 @@ public class RegisterAndRemoveTest {
     private static String rpc_regist_address = "localhost:9888/nodou?username=dahuaboke&password=dwq520";
 
     public static void main(String[] args) {
-        for (int a = 0; a < 2; a++) {
+        for (int a = 0; a < 1000; a++) {
             String nodeKey = "com.dahuaboke.service" + a;
             String nodeValue = "192.168.3." + a + ":9999";
             String version = "1.0.0";

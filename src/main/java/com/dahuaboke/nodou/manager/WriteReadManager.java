@@ -7,7 +7,6 @@ import com.dahuaboke.nodou.util.NodouUtil;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author:dahua
@@ -53,7 +52,7 @@ public class WriteReadManager {
                 }
             }
         } else {
-            getInstance().put(key, new ConcurrentHashMap<String, Set>() {{
+            getInstance().put(key, new NodeModel<String, Set>() {{
                 put(model.getNodeKey(), new HashSet() {{
                     add(model.getNodeValue());
                 }});

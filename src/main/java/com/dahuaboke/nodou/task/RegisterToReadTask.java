@@ -45,9 +45,12 @@ public class RegisterToReadTask implements Runnable {
                             if (hasKey) {
                                 Set s = (Set) ((Map) nodeModel.get(k)).get(entry.getKey());
                                 s.removeAll(entry.getValue());
-                                if(s.isEmpty()){
+                                if (s.isEmpty()) {
                                     ((Map) nodeModel.get(k)).remove(entry.getKey());
                                 }
+                            }
+                            if(((Map) nodeModel.get(k)).isEmpty()){
+                                nodeModel.remove(k);
                             }
                         }
                     }

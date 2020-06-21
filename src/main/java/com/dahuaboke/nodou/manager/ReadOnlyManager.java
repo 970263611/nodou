@@ -3,7 +3,10 @@ package com.dahuaboke.nodou.manager;
 import com.dahuaboke.nodou.model.NodeModel;
 import com.dahuaboke.nodou.util.NodouUtil;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author:dahua
@@ -38,7 +41,7 @@ public class ReadOnlyManager {
     }
 
     private static class SingleRegisterNode2 {
-        private static final NodeModel INSTANCE = new NodeModel();
+        private static final NodeModel INSTANCE = new NodeModel()/*.clone(RegisterManager.getInstance())*/;
     }
 
     /**

@@ -29,18 +29,13 @@ public class ManagerConfiguration {
     }
 
     public ManagerConfiguration(@Value("${log.address}") String address) {
-//        pool.scheduleAtFixedRate(new WriteToRegisterTask(), 10, 10, TimeUnit.SECONDS);
-//        Thread t1 = new Thread(new RegisterToReadTask(ReadOnlyManager.getInstance1(), "instance1"));
-//        Thread t2 = new Thread(new RegisterToReadTask(ReadOnlyManager.getInstance2(), "instance2"));
-//        pool.scheduleAtFixedRate(t1, 60 * 5, 60 * 5, TimeUnit.SECONDS);
-//        pool.scheduleAtFixedRate(t2, 10, 10, TimeUnit.SECONDS);
-//        pool.scheduleAtFixedRate(new HeartbeatTask(), 30, 30, TimeUnit.SECONDS);
-//        pool.scheduleAtFixedRate(new PersistenceTask(address), 60 * 30, 60 * 30, TimeUnit.SECONDS);
-
         pool.scheduleAtFixedRate(new WriteToRegisterTask(), 10, 10, TimeUnit.SECONDS);
+        Thread t1 = new Thread(new RegisterToReadTask(ReadOnlyManager.getInstance1(), "instance1"));
         Thread t2 = new Thread(new RegisterToReadTask(ReadOnlyManager.getInstance2(), "instance2"));
+        pool.scheduleAtFixedRate(t1, 60 * 5, 60 * 5, TimeUnit.SECONDS);
         pool.scheduleAtFixedRate(t2, 10, 10, TimeUnit.SECONDS);
-        pool.scheduleAtFixedRate(new HeartbeatTask(), 10, 10, TimeUnit.SECONDS);
+        pool.scheduleAtFixedRate(new HeartbeatTask(), 30, 30, TimeUnit.SECONDS);
+        pool.scheduleAtFixedRate(new PersistenceTask(address), 60 * 30, 60 * 30, TimeUnit.SECONDS);
     }
 
 }

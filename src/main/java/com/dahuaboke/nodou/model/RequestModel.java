@@ -1,6 +1,8 @@
 package com.dahuaboke.nodou.model;
 
-public class RequestModel {
+import java.io.Serializable;
+
+public class RequestModel implements Serializable {
 
     private String username;
     private String password;
