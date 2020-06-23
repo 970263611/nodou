@@ -11,12 +11,13 @@ import java.util.HashMap;
  */
 public class RegisterAndRemoveTest {
 
-    private static String rpc_regist_address = "localhost:9888/nodou?username=dahuaboke&password=dwq520";
+    private static String rpc_regist_address = "localhost:9888/nodou?username=dahuatest&password=dahuatest";
+//    private static String rpc_regist_address = "localhost:9888/nodou?username=dahuaboke&password=dahuaboke";
 
     public static void main(String[] args) {
-        for (int a = 0; a < 1000; a++) {
+        for (int a = 0; a < 20; a++) {
             String nodeKey = "com.dahuaboke.service" + a;
-            String nodeValue = "192.168.3." + a + ":9999";
+            String nodeValue = "192.168.2." + a + ":9999";
             String version = "1.0.0";
             HashMap<String, String> paramsMap = new HashMap<>();
             String[] params = rpc_regist_address.split("\\?")[1].split("&");
@@ -26,8 +27,8 @@ public class RegisterAndRemoveTest {
             paramsMap.put("nodeKey", nodeKey);
             paramsMap.put("nodeValue", nodeValue);
             paramsMap.put("version", version);
-//            paramsMap.put("autoRemove", "false");
-            paramsMap.put("autoRemove", "true");
+            paramsMap.put("autoRemove", "false");
+//            paramsMap.put("autoRemove", "true");
 
             RestTemplate restTemplate = new RestTemplate();
             String url = "http://" + rpc_regist_address.split("\\?")[0];

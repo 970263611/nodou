@@ -1,28 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:javascript="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>图形化</title>
-    <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table td, table th {
+            border: 1px solid #cad9ea;
+            color: #666;
+            height: 30px;
+        }
+        table thead th {
+            background-color: #CCE8EB;
+            width: 100px;
+        }
+        table tr:nth-child(odd) {
+            background: #fff;
+        }
+        table tr:nth-child(even) {
+            background: #F5FAFA;
+        }
+        td{
+            width: 380px;
+        }
+    </style>
 </head>
 <body>
-<table id="table" class="display">
+<div>
+    <h3 id='heartTime'></h3>
+    <div>
+        <a href="javascript:void(0);" onclick="showTable('governWriteDataTable')">governWriteData</a>
+        <a href="javascript:void(0);" onclick="showTable('governRegisterDataTable')">governRegisterData</a>
+        <a href="javascript:void(0);" onclick="showTable('governReadData1Table')">governReadData1</a>
+        <a href="javascript:void(0);" onclick="showTable('governReadData2Table')">governReadData2</a>
+    </div>
+    <table id="governWriteDataTable">
+        <thead>
+        <th>namespace</th>
+        <th>nodeKey</th>
+        <th>nodeValue</th>
+        </thead>
+        <tbody id="governWriteData">
 
-</table>
+        </tbody>
+    </table>
+    <table id="governRegisterDataTable">
+        <thead>
+        <th>namespace</th>
+        <th>nodeKey</th>
+        <th>nodeValue</th>
+        </thead>
+        <tbody id="governRegisterData">
+
+        </tbody>
+    </table>
+    <table id="governReadData1Table">
+        <thead>
+        <th>namespace</th>
+        <th>nodeKey</th>
+        <th>nodeValue</th>
+        </thead>
+        <tbody id="governReadData1">
+
+        </tbody>
+    </table>
+    <table id="governReadData2Table">
+        <thead>
+        <th>namespace</th>
+        <th>nodeKey</th>
+        <th>nodeValue</th>
+        </thead>
+        <tbody id="governReadData2">
+
+        </tbody>
+    </table>
+</div>
 <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
 <script>
-    $(document).ready( function () {
-        $.ajax({
-            url:'/governData',
-            dataType:'json',
-            type:'post',
-            success:function(data){
-                alert(data)
+
+    $(function () {
+        allHide();
+        getData();
+    });
+
+    function allHide(){
+        $("#governWriteDataTable").hide();
+        $("#governRegisterDataTable").hide();
+        $("#governReadData1Table").hide();
+        $("#governReadData2Table").hide();
+    }
+
+    function showTable(id){
+        getData();
+        allHide();
+        $('#'+id).show();
+    }
+
+    function getHtml(data){
+        var html = ""
+        for(var o in data){
+            var size = 0;
+            var htmlBack = "";
+            var htmlTemp = "";
+            var secondSize = 0;
+            for(var b in data[o]){
+                if(size===0){
+                    htmlTemp += "<td rowspan='" + data[o][b].length + "'> " + b + "</td>";
+                } else {
+                    htmlBack += "<tr><td rowspan='" + data[o][b].length + "'> " + b + "</td>"
+                }
+                for(var a=0;a<data[o][b].length;a++){
+                    if(size===0){
+                        htmlTemp += "<td>" + data[o][b][a] + "</td>";
+                        secondSize++;
+                    } else if(a!==0) {
+                        htmlBack += "<tr><td>" + data[o][b][a] + "</td></tr>";
+                    } else {
+                        htmlBack  += "<td>" + data[o][b][a] + "</td></tr>";
+                    }
+                    size++;
+                }
             }
-        })
-        $('#table').DataTable();
-    })
+            var htmlFont = "<tr><td rowspan='" + size + "'> " + o + "</td>" + htmlTemp + "</tr>";
+            html += htmlFont + htmlBack;
+        }
+        return html;
+    }
+
+    function getData(){
+        $.ajax({
+            url: '/governWriteData',
+            dataType: 'json',
+            type: 'post',
+            async: false,
+            success: function (data) {
+                var html = getHtml(data);
+                $("#governWriteData").html(html);
+            }
+        });
+        $.ajax({
+            url: '/governRegisterData',
+            dataType: 'json',
+            type: 'post',
+            async: false,
+            success: function (data) {
+                var html = getHtml(data);
+                $("#governRegisterData").html(html);
+            }
+        });
+        $.ajax({
+            url: '/governReadData1',
+            dataType: 'json',
+            type: 'post',
+            async: false,
+            success: function (data) {
+                var html = getHtml(data);
+                $("#governReadData1").html(html);
+            }
+        });
+        $.ajax({
+            url: '/governReadData2',
+            dataType: 'json',
+            type: 'post',
+            async: false,
+            success: function (data) {
+                var html = getHtml(data);
+                $("#governReadData2").html(html);
+            }
+        });
+        $.ajax({
+            url: '/getHeartTime',
+            type: 'post',
+            async: false,
+            success: function (data) {
+                $("#heartTime").text('最后一次心跳时间：' + data);
+            }
+        });
+    }
 </script>
 </body>
 </html>

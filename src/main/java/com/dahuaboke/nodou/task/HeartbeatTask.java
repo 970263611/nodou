@@ -4,9 +4,14 @@ import com.dahuaboke.nodou.manager.ReadOnlyManager;
 import com.dahuaboke.nodou.manager.RegisterManager;
 import com.dahuaboke.nodou.util.NetUtil;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class HeartbeatTask implements Runnable {
+
+    private static volatile String heartTime;
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd :hh:mm:ss");
 
     /**
      * //TODO
@@ -23,6 +28,7 @@ public class HeartbeatTask implements Runnable {
      */
     @Override
     public void run() {
+        heartTime = LocalDateTime.now().format(dtf);
         RegisterManager.getInstance().forEach((k, v) -> {
             String[] keys = ((String) k).split("-");
             if (Boolean.valueOf(keys[keys.length - 1])) {
@@ -59,5 +65,9 @@ public class HeartbeatTask implements Runnable {
                 }
             }
         });
+    }
+
+    public static String getHeartTime(){
+        return heartTime;
     }
 }

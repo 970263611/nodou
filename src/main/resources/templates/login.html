@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+</head>
+<body>
+<div>
+    username:<input type="text" id="username">
+    password:<input type="password" id="password">
+    <input type="button" onclick="login()" value="login">
+</div>
+<script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+
+    function login() {
+        $.ajax({
+            url: '/toLogin',
+            data: {"username": $("#username").val(), "password": $("#password").val()},
+            type: 'post',
+            success: function (data) {
+                if(data === 'ok'){
+                    window.location.href="govern";
+                } else {
+                    alert(data);
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

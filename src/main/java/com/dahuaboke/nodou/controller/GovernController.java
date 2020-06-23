@@ -4,44 +4,110 @@ import com.dahuaboke.nodou.exception.NodouException;
 import com.dahuaboke.nodou.manager.ReadOnlyManager;
 import com.dahuaboke.nodou.manager.RegisterManager;
 import com.dahuaboke.nodou.manager.WriteReadManager;
+import com.dahuaboke.nodou.model.NodeModel;
 import com.dahuaboke.nodou.model.RequestModel;
+import com.dahuaboke.nodou.task.HeartbeatTask;
 import com.dahuaboke.nodou.util.NodouUtil;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class GovernController {
 
-    @RequestMapping("/")
-    public String govern(RequestModel requestModel) throws NodouException {
-        if (!"admin".equals(requestModel.getUsername())) {
-            NodouUtil.checkParam(requestModel, "get");
+    @GetMapping("/")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/login")
+    public String login1() {
+        return "login";
+    }
+
+    @GetMapping("/govern")
+    public String govern(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            return "login";
         }
         return "govern";
     }
 
+    @PostMapping("/toLogin")
+    @ResponseBody
+    public String govern(RequestModel requestModel, HttpServletRequest request) {
+        try {
+            NodouUtil.checkParam(requestModel, "get");
+        } catch (NodouException e) {
+            return "username or password error";
+        }
+        HttpSession session = request.getSession();
+        session.setAttribute("username", requestModel.getUsername());
+        return "ok";
+    }
+
     @RequestMapping("/governWriteData")
     @ResponseBody
-    public Object governWriteData() {
-        return WriteReadManager.getInstance();
+    public Object governWriteData(HttpServletRequest request) {
+        return resultMethod(request, WriteReadManager.getInstance());
     }
 
     @RequestMapping("/governRegisterData")
     @ResponseBody
-    public Object governRegisterData() {
-        return RegisterManager.getInstance();
+    public Object governRegisterData(HttpServletRequest request) {
+        return resultMethod(request, RegisterManager.getInstance());
     }
 
     @RequestMapping("/governReadData1")
     @ResponseBody
-    public Object governReadData1() {
-        return ReadOnlyManager.getInstance1();
+    public Object governReadData1(HttpServletRequest request) {
+        return resultMethod(request, ReadOnlyManager.getInstance1());
     }
 
     @RequestMapping("/governReadData2")
     @ResponseBody
-    public Object governReadData2() {
-        return ReadOnlyManager.getInstance2();
+    public Object governReadData2(HttpServletRequest request) {
+        return resultMethod(request, ReadOnlyManager.getInstance2());
+    }
+
+    @RequestMapping("/getHeartTime")
+    @ResponseBody
+    public Object getHeartTime() {
+        return HeartbeatTask.getHeartTime();
+    }
+
+    private NodeModel resultMethod(HttpServletRequest request, NodeModel nodeModel) {
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute("username");
+        if ("admin".equals(username)) {
+            return nodeModel;
+        }
+        NodeModel result = new NodeModel();
+        nodeModel.forEach((k, v) -> {
+            if (((String) k).contains(username)) {
+                result.put(k, v);
+            }
+        });
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Class c1 = new ArrayList<String>().getClass();
+        Class c2 = new ArrayList<Integer>().getClass();
+        System.out.println(c1 == c2);
+        List l1 = new ArrayList();
+        List l2 = new ArrayList();
+        Class c3 = l1.getClass();
+        Class c4 = l2.getClass();
+        System.out.println(c3 == c4);
     }
 }
