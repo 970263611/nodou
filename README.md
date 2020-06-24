@@ -10,9 +10,11 @@
 
 提供身份验证功能。保证服务之间的独立性。
 
-添加了图形化界面展示
+添加了图形化界面展示。
 
-具体信息访问： https://dahuaboke.com/single?id=73 
+具体信息访问： https://dahuaboke.com/single?id=73 。
+
+上述地址就是使用的nodou2.0。
 
 ### 联系我
 
