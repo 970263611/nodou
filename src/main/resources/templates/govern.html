@@ -109,17 +109,15 @@
             var size = 0;
             var htmlBack = "";
             var htmlTemp = "";
-            var secondSize = 0;
             for(var b in data[o]){
                 if(size===0){
                     htmlTemp += "<td rowspan='" + data[o][b].length + "'> " + b + "</td>";
                 } else {
-                    htmlBack += "<tr><td rowspan='" + data[o][b].length + "'> " + b + "</td>"
+                    htmlBack += "<tr><td rowspan='" + data[o][b].length + "'> " + b + "</td>";
                 }
                 for(var a=0;a<data[o][b].length;a++){
                     if(size===0){
                         htmlTemp += "<td>" + data[o][b][a] + "</td>";
-                        secondSize++;
                     } else if(a!==0) {
                         htmlBack += "<tr><td>" + data[o][b][a] + "</td></tr>";
                     } else {
