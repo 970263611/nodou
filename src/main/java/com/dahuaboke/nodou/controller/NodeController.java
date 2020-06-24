@@ -30,9 +30,9 @@ public class NodeController {
         final String key = NodouUtil.assemblyKey(requestModel);
         Map map = ReadOnlyManager.getNode(key);
         if (NodouUtil.isBlank(map)) {
-            map = WriteReadManager.getNode(key);
+            map = RegisterManager.getNode(key);
             if (NodouUtil.isBlank(map)) {
-                map = RegisterManager.getNode(key);
+                map = WriteReadManager.getNode(key);
             }
         }
         if (NodouUtil.isBlank(map)) {
