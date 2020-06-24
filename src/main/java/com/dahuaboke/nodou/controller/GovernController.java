@@ -99,15 +99,4 @@ public class GovernController {
         });
         return result;
     }
-
-    public static void main(String[] args) {
-        Class c1 = new ArrayList<String>().getClass();
-        Class c2 = new ArrayList<Integer>().getClass();
-        System.out.println(c1 == c2);
-        List l1 = new ArrayList();
-        List l2 = new ArrayList();
-        Class c3 = l1.getClass();
-        Class c4 = l2.getClass();
-        System.out.println(c3 == c4);
-    }
 }
