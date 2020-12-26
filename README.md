@@ -12,7 +12,7 @@
 
 添加了图形化界面展示。
 
-具体信息访问： https://dahuaboke.com/single?id=73 。
+具体信息访问： https://dahuaboke.com/single?id=72 。
 
 上述地址就是使用的nodou2.0。
 
